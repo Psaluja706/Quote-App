@@ -24,6 +24,8 @@ const Listing = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
@@ -41,6 +43,7 @@ const Listing = () => {
         setItems(response?.data?.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+        setError(true)
       }
 
       setLoading(false);
@@ -48,6 +51,13 @@ const Listing = () => {
 
     fetchData();
   }, []);
+  console.log({token})
+
+  useEffect(() => {
+    if (!token || error) {
+      navigate("/login");
+    }
+  }, [token]);
 
   return (
     <ThemeProvider theme={designTheme}>
@@ -70,10 +80,9 @@ const Listing = () => {
           </Typography>
           <Button
             variant="contained"
-            width="200px"
             onClick={() => navigate("/create")}
           >
-            Save
+            Create Quote
           </Button>
         </Stack>
         {loading ? (
